@@ -70,8 +70,55 @@ public class Test_Pat_Main {
 
         long endTime_hyb = System.currentTimeMillis();
 
-        System.out.println("Temps total d'insertion : " + elapsedTime + " millisecondes soit "+ (endTime - startTime)/1000.0+ " secondes");
-        System.out.println("****Temps écoué costruction de l'arbre********* "+ (endTime_hyb - startTime_hyb) + "milisecondes soit "+ (endTime_hyb - startTime_hyb)/1000.0+ " secondes");
-    }
+        //Question 6.11 
+        String long_word = "pneumonoultramicroscopicsilicovolcanoconiosis";
+        List<String> suppr_word = Arrays.asList("and","our","for");
 
+        long PatinsertStartTime = System.currentTimeMillis();
+        pat.patInsertion(long_word);
+        long PatinsertEndTime = System.currentTimeMillis();
+
+        long HyBinsertStartTime = System.currentTimeMillis();
+        tree.insertKey(long_word);
+        long HyBinsertEndTime = System.currentTimeMillis();
+
+        Long PatprofStartTime = System.currentTimeMillis();
+        pat.profondeurMoyenne();
+        Long PatprofEndTime = System.currentTimeMillis(); 
+
+        Long HyBprofStartTime = System.currentTimeMillis();
+        tree.ProfondeurMoyenne(tree);
+        Long HyBprofEndTime = System.currentTimeMillis();
+
+        Long PatrechStartTime = System.currentTimeMillis();
+        for(String val: suppr_word)
+            pat.rechercher_mot(val);
+        Long PatrechEndTime = System.currentTimeMillis();
+
+        Long HyBrechStartTime = System.currentTimeMillis();
+        for(String val: suppr_word)
+            tree.Recherche(tree, val);
+        Long HyBrechEndTime = System.currentTimeMillis();
+        /*
+        Long PatsuppStartTime = System.currentTimeMillis();
+        for(String val: suppr_word)
+            pat.suppression(val);
+        Long PatsuppEndTime = System.currentTimeMillis(); 
+
+        Long HyBsuppStartTime = System.currentTimeMillis();
+        for(String val: suppr_word)
+            tree.Suppression(tree,val);
+        Long HyBsuppEndTime = System.currentTimeMillis();
+        */
+        System.out.println("****Temps écoulé construction de l'arbre pat trie*********" + elapsedTime + " millisecondes soit "+ (endTime - startTime)/1000.0+ " secondes");
+        System.out.println("****Temps écoulé construction de l'arbre trie Hyb********* "+ (endTime_hyb - startTime_hyb) + "milisecondes soit "+ (endTime_hyb - startTime_hyb)/1000.0+ " secondes");
+        System.out.println("****Temps écoulé insertion dans l'arbre patricia********* "+ (PatinsertEndTime - PatinsertStartTime) + "milisecondes soit "+ (PatinsertEndTime - PatinsertStartTime)/1000.0+ " secondes");
+        System.out.println("****Temps écoulé insertion dans la trie hybride********* "+ (HyBinsertEndTime - HyBinsertStartTime) + "milisecondes soit "+ (HyBinsertEndTime - HyBinsertStartTime)/1000.0+ " secondes");
+        System.out.println("****Temps écoulé profondeur de l'arbre patricia********* "+ (PatprofEndTime - PatprofStartTime) + "milisecondes soit "+ (PatprofEndTime - PatprofStartTime)/1000.0+ " secondes");
+        System.out.println("****Temps écoulé profondeur de la trie hybride********* "+ (HyBprofEndTime - HyBprofStartTime) + "milisecondes soit "+ (HyBprofEndTime - HyBprofStartTime)/1000.0+ " secondes");
+        System.out.println("****Temps écoulé recherche dans l'arbre patricia********* "+ (PatrechEndTime - PatrechStartTime) + "milisecondes soit "+ (PatrechEndTime - PatrechStartTime)/1000.0+ " secondes");
+        System.out.println("****Temps écoulé recherche dans la trie hybride********* "+ (HyBrechEndTime - HyBrechStartTime) + "milisecondes soit "+ (HyBrechEndTime - HyBrechStartTime)/1000.0+ " secondes");
+
+    }
+    
 }
