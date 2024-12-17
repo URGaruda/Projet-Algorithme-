@@ -50,9 +50,13 @@ public class Test_Oral_Main {
         String short_word="dodu";
         List<String> sz_word = Arrays.asList("pneumonoultramicroscopicsilicovolcanoconiosis","government","dodu");
         
+        System.out.println("Nombre de comparaison de l'initialisation de la patricia trie = "+pat.comparaisonCpt);
+
+        pat.comparaisonCpt=0;
         long PatinsertStartTime = System.currentTimeMillis();
         for(String val: sz_word)
             pat.patInsertion(val);
+        System.out.println("Nombre de comparaison de l'insertion = "+pat.comparaisonCpt);
         long PatinsertEndTime = System.currentTimeMillis();
 
         long HyBinsertStartTime = System.currentTimeMillis();
@@ -64,9 +68,11 @@ public class Test_Oral_Main {
         ArrayList<Boolean> pat_res= new ArrayList<Boolean>();
         ArrayList<Boolean> hyb_res= new ArrayList<Boolean>();
 
+        pat.comparaisonCpt=0;
         Long PatrechStartTime = System.currentTimeMillis();
         for(String val: sz_word)
             pat_res.add(pat.rechercher_mot(val));
+        System.out.println("Nombre de comparaison de la recherche = "+pat.comparaisonCpt);
         Long PatrechEndTime = System.currentTimeMillis();
 
         Long HyBrechStartTime = System.currentTimeMillis();
@@ -82,8 +88,10 @@ public class Test_Oral_Main {
             System.out.print("valeur : "+val+" ");
         System.out.println();
 
+        pat.comparaisonCpt=0;
         Long PathautStartTime = System.currentTimeMillis();
         System.out.println("hauteur de la patricia trie = "+pat.hauteur());
+        System.out.println("Nombre de liste parcouru = "+pat.comparaisonCpt);
         Long PathautEndTime = System.currentTimeMillis();
 
         Long HyBhautStartTime = System.currentTimeMillis();
