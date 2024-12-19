@@ -232,7 +232,7 @@ public Hybridetries insertKey(String key) {
     }
 
     public int getcpt_re(){
-        System.out.println("complexité recherche : nb de comparaisons " + cpt_re );
+        System.out.println("complexité recherche : nb de d'apel récursifs " + cpt_re );
         return cpt_re;
     }
 
@@ -244,40 +244,48 @@ public Hybridetries insertKey(String key) {
      
        
      if(this.isEmpty()){System.out.println("false " + this.getrac().getcpt());return false;}
-        cpt_re+=3;
+       
      if (p < this.getrac().getRa()) {
+         cpt_re+=1;
            return inf.Recherche(this.inf, mot.toLowerCase());  
         }
-      
-     else if (p > this.getrac().getRa()) {
+        
+     if (p > this.getrac().getRa()) {
+         cpt_re+=1;
             return sup.Recherche(this.sup,mot.toLowerCase());
         }
-       
+        
      else {
+        
             if(mot.length()==1&&this.getrac().getcpt()!=0){System.out.println("true " + this.getrac().getcpt());return true;}
             else if (mot.length()==1){System.out.println("false " + this.getrac().getcpt()); return false;}
-
+            cpt_re+=1;
            return  eq.Recherche(this.eq,remaining(mot.toLowerCase()));  
         }
         
     }
 
+    public int compter_noeuds=0;// pour compter tous les neouds de l'arbre
+
     void reset_flag(){// remet CPT à 0 et tous les noeuds à nul, peut etre pb ptrs null plus que ce qu'il en faut
 
         
         if (this.inf!=null&&!this.inf.isEmpty()){
+        
         this.getrac().resetflag();
         this.inf.reset_flag();
 
         }
 
         if(this.sup!=null&&!this.sup.isEmpty()){
+        
         this.getrac().resetflag();
         this.sup.reset_flag();
         }
      
     
         if(this.eq!=null&&!this.eq.isEmpty()){ 
+       
         this.getrac().resetflag();
         this.eq.reset_flag();
 
@@ -291,9 +299,11 @@ public Hybridetries insertKey(String key) {
         if(arbre.isEmpty()) return 0; 
        
      if(arbre.getrac().getcpt()!=0&&arbre.getrac().getVisited()==false){//si pas visité et c'est un mots on rajoute 1
-        arbre.getrac().setVisited();
+        compter_noeuds++;
+         arbre.getrac().setVisited();
         return 1+ Compter_bis(arbre.eq)+Compter_bis(arbre.sup)+ Compter_bis(arbre.inf);
      }else{
+        compter_noeuds++;
         return Compter_bis(arbre.eq)+Compter_bis(arbre.sup)+ Compter_bis(arbre.inf);
      }
         
@@ -379,23 +389,21 @@ public Hybridetries insertKey(String key) {
 
  //regler pb flag visited
 
- private static int cpt_ha=0;
+ 
 
- public int getcpt_ha(){
-    return cpt_ha;
- }
+ 
  public  Set<Integer> hauteur_bis(Hybridetries abr_courant , int cpt_courant, Set<Integer> profondeurs){
                 
     if (abr_courant.eq.isEmpty()&&abr_courant.inf.isEmpty()&&abr_courant.sup.isEmpty()) {
         profondeurs.add(cpt_courant);
-        cpt_ha+=2;
+       
         return profondeurs;
     }else{
 
 
     if (!abr_courant.inf.isEmpty()){
         cpt_courant++;
-
+       
         hauteur_bis(abr_courant.inf, cpt_courant--, profondeurs);
         
 
@@ -403,7 +411,6 @@ public Hybridetries insertKey(String key) {
 
     if (!abr_courant.sup.isEmpty()){
         cpt_courant++;
-
         hauteur_bis(abr_courant.sup, cpt_courant--, profondeurs);
     }
 
@@ -417,6 +424,7 @@ public Hybridetries insertKey(String key) {
     return profondeurs;
  }
 
+   
    
   public int Hauteur(Hybridetries arbre){
   
@@ -448,10 +456,8 @@ public Hybridetries insertKey(String key) {
     return cpt/temp.size();
  }
 
-
+public int cpt_pref=0;
  public int  Prefixe(Hybridetries arbre,String mot){
-
-    
 
     char p = firstchar(mot.toLowerCase());
     
@@ -460,30 +466,35 @@ public Hybridetries insertKey(String key) {
 
     if(p==' '){
         if(this.getrac().getcpt()!=0){
+            cpt_pref++;
            return 1+ sup.Prefixe(this.sup,mot.toLowerCase())+inf.Prefixe(this.inf,mot.toLowerCase())+eq.Prefixe(this.eq,mot.toLowerCase());
             }
         else{
+            cpt_pref++;
             return sup.Prefixe(this.sup,mot.toLowerCase())+inf.Prefixe(this.inf,mot.toLowerCase())+eq.Prefixe(this.eq,mot.toLowerCase());
         }
     } 
     
 
     if(p < this.getrac().getRa()) {
+        cpt_pref++;
           return inf.Prefixe(this.inf, mot.toLowerCase());  
        }
      
     else if (p > this.getrac().getRa()) {
+         cpt_pref++;
           return sup.Prefixe(this.sup,mot.toLowerCase());
        }
       
     else {
            if(mot.length()==1&&this.getrac().getcpt()!=0){
-            
+             cpt_pref++;
              return 1+ eq.Prefixe(this.eq,remaining(mot.toLowerCase()));
             }else if(mot.length()==1){
+                cpt_pref++;
                 return 0 + eq.Prefixe(this.eq,remaining(mot.toLowerCase()));
             }
-           
+            cpt_pref++;
 
            return eq.Prefixe(this.eq,remaining(mot.toLowerCase()));  
        }
@@ -560,6 +571,8 @@ void reset(){// remet CPT à 0 et tous les noeuds à nul, peut etre pb ptrs null
     
 }
 
+public static int cpt_bulle=0;
+
 public static void bubbleSort(String[][] arr) {
     int n = arr.length;
   
@@ -570,6 +583,7 @@ public static void bubbleSort(String[][] arr) {
             int integer1=Integer.parseInt(arr[j][1]);
             int integer2=Integer.parseInt(arr[j + 1][1]);
             if (integer1-integer2 > 0) {
+                cpt_bulle++;
                 
                 String[] temp = arr[j];
                 arr[j] = arr[j + 1];
@@ -621,7 +635,7 @@ public Hybridetries Suppression(Hybridetries arbre, String mot){
    return arbre;
 }
 
-/*******************Pour exprerimentation******************************* */
+/*******************Pour exprerimentation avec les oeuvres de Shakespeare******************************* */
  public void read(Hybridetries arbre,String filePath) {
         File file = new File(filePath);
 
@@ -636,5 +650,13 @@ public Hybridetries Suppression(Hybridetries arbre, String mot){
     }
 
  }
+
+
+
+ 
+
+ 
+
+
 
 }
