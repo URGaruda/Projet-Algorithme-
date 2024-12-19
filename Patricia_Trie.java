@@ -8,7 +8,7 @@ public class Patricia_Trie{
     protected Elements[] liste = new Elements[127] ;
     protected boolean mot_vide = false ;
     protected int nb_nil;
-    public int comparaisonCpt = 0 ;
+    public static int comparaisonCpt = 0 ;
     public class Elements{
         private String val;
         private Patricia_Trie next ;
@@ -262,7 +262,7 @@ public class Patricia_Trie{
                         l.add(deep);
                 }
                 if(cle.getNext()!=null){
-                    comparaisonCpt++;
+                    Patricia_Trie.comparaisonCpt++;
                     cle.getNext().profondeurList(l, deep+1);
                 }
             }
@@ -293,7 +293,7 @@ public class Patricia_Trie{
             }else{
                 val_pure=cle.getVal().substring(0,cle.getVal().length());
             }
-            comparaisonCpt++;
+            Patricia_Trie.comparaisonCpt++;
             if(m.startsWith(val_pure)){ // cas où on insert un mot égal ou suffixe d'un mot déjà insérer 
                 if(cle.getNext()==null){
                     cle.setNext(new Patricia_Trie());
@@ -310,7 +310,6 @@ public class Patricia_Trie{
                 Patricia_Trie tmp = cle.getNext(); // temporaire de la liste suivante 
                 Patricia_Trie next = new Patricia_Trie() ; // prochaine liste
                 int len = petit.length();
-                comparaisonCpt++;
                 if(!petit.equals(m)){
                     String suf1 = m.substring(len);
                     String suf2 = cle.val.substring(len);
@@ -360,13 +359,13 @@ public class Patricia_Trie{
         }
         Elements cle = getElm_At(mot);
         if(cle!=null){
+            Patricia_Trie.comparaisonCpt++;
             String petit;
             if(cle.val.endsWith(String.valueOf(fin_chaine))){
                 petit=cle.getVal().substring(0,cle.getVal().length()-1);
             }else{
                 petit=cle.getVal().substring(0,cle.getVal().length());
             }
-            comparaisonCpt++;
             if(petit.equals(mot)){ // cas ou le plus grand prefixe commun vaut le mot recherché 2 possibilités 1. la cle se termine par '\0' et le mot y est 2. non
                 if(cle.val.endsWith(String.valueOf(fin_chaine))){
                     return true;
@@ -375,7 +374,6 @@ public class Patricia_Trie{
             }
             int len1= petit.length();
             int len2= mot.length();
-            comparaisonCpt++;
             if(len1>=len2 || !(mot.startsWith(petit))){// on verifie que le mot qu'on cherche est bien plus long que la clé qu'on possède sinon c'est qu'il n'y est pas 
                 System.out.println("Plus petit");
                 return false;
