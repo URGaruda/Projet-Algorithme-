@@ -5,11 +5,8 @@ import java.util.regex.Pattern;
 
 public class Patricia_Trie{
     protected char fin_chaine='\0';
-    //protected String fin_chaine=Character.toString(0);
     protected Elements[] liste = new Elements[127] ;
     protected boolean mot_vide = false ;
-    protected final Elements [] first_list = liste ;
-    protected boolean is_end = false;
     protected int nb_nil;
     public int comparaisonCpt = 0 ;
     public class Elements{
@@ -45,6 +42,7 @@ public class Patricia_Trie{
         nb_nil=127;
     }
 
+
     public static String plusGrandPrefixe(String mot1, String mot2) {
         int minLength = Math.min(mot1.length(), mot2.length());
         int i = 0;
@@ -60,10 +58,6 @@ public class Patricia_Trie{
         ascii-=1;
         return liste[ascii];
     } 
-
-    public Patricia_Trie enfant(String m){
-        return getElm_At(m).getNext();
-    }
 
     public void setElm_At(String at,String val,Patricia_Trie next){
         if(val==null || val.isEmpty()){return ;}
@@ -164,31 +158,25 @@ public class Patricia_Trie{
     public int prefixe(String mot){
         if(mot==null){return -1;}
         if(mot.isEmpty()){
-            if(this.liste==first_list){
+            if(mot_vide){
                 return 1;
             }    
             return 0;
         }
-        comparaisonCpt++;
         Elements cle=getElm_At(mot);
         if(cle!=null){
             int len1=mot.length();
-            int len2=cle.getVal().length();
             String val_pure;
-            comparaisonCpt++;
             if(cle.val.endsWith(String.valueOf(fin_chaine))){
                 val_pure=cle.getVal().substring(0,cle.getVal().length()-1);
             }else{
                 val_pure=cle.getVal().substring(0,cle.getVal().length());
             }
-            comparaisonCpt++;
+            int len2=val_pure.length();
             if(len1>len2){ // on regarde si le mot commence par clé : cas ou le mot est + grand que la clé 
-                comparaisonCpt++;
                 if(mot.startsWith(val_pure)){ 
-                    String petit = Patricia_Trie.plusGrandPrefixe(mot, val_pure);
-                    comparaisonCpt+=petit.length();
                     if(cle.getNext()!=null){
-                        return cle.getNext().prefixe(mot.substring(petit.length())); 
+                        return cle.getNext().prefixe(mot.substring(val_pure.length())); 
                     }else{
                         return 0;
                     }
@@ -197,16 +185,18 @@ public class Patricia_Trie{
                 }
             }else{
                 // on regarde si la clé commence avec mot  : cas ou clé est + grande ou égal au mot 
-                comparaisonCpt++;
                 if(val_pure.startsWith(mot)){
-                    comparaisonCpt++;
                     if(cle.getNext()!=null){
                         if(cle.getVal().endsWith(String.valueOf(fin_chaine))){
                             return 1+cle.getNext().comptageMots();
                         }
                         return cle.getNext().comptageMots();
                     }else{
-                        return 1;
+                        if(cle.getVal().endsWith(String.valueOf(fin_chaine))){
+                            return 1;
+                        }else{
+                            return 0; 
+                        }
                     }
                 }else{
                     return 0;
@@ -268,20 +258,24 @@ public class Patricia_Trie{
             if(liste[i]!=null){
                 Elements cle=liste[i];
                 if(cle.val.endsWith(String.valueOf(fin_chaine))){
-                    l.add(deep);
+                    if(cle.getNext()==null)
+                        l.add(deep);
                 }
                 if(cle.getNext()!=null){
+                    comparaisonCpt++;
                     cle.getNext().profondeurList(l, deep+1);
                 }
             }
         }
     }
 
-
     public void patInsertion(String m){
+        patInsertionBis(m, this.liste);
+    }
+    private void patInsertionBis(String m,Elements[] first){
         if(m==null){return ;}
         if(m.isEmpty()){
-            if(this.liste==first_list){
+            if(this.liste==first){
                 mot_vide=true;
             }    
             return ;
@@ -300,52 +294,48 @@ public class Patricia_Trie{
                 val_pure=cle.getVal().substring(0,cle.getVal().length());
             }
             comparaisonCpt++;
-            if(m.startsWith(val_pure)){ // cas où on insert un mot suffixe d'un mot déjà insérer 
+            if(m.startsWith(val_pure)){ // cas où on insert un mot égal ou suffixe d'un mot déjà insérer 
                 if(cle.getNext()==null){
                     cle.setNext(new Patricia_Trie());
                 }
                 if(cle.getVal().endsWith(String.valueOf(fin_chaine))){
-                    cle.getNext().patInsertion(m.substring(cle.getVal().length()-1)); // insert le suffixe du mot dans le noeud interne 
+                    cle.getNext().patInsertionBis(m.substring(cle.getVal().length()-1),first); // insert le suffixe du mot dans le noeud interne 
                 }else{
-                    cle.getNext().patInsertion(m.substring(cle.getVal().length()));
+                    cle.getNext().patInsertionBis(m.substring(cle.getVal().length()),first);
                 }
             }else{
-                if(m==cle.getVal().substring(0,cle.getVal().length()-1)){
-                    return ; 
-                }else{ // cas ou on insert un préfixe d'un mot déjà insérer dans le noeud 
-                    String petit = Patricia_Trie.plusGrandPrefixe(m, cle.getVal()); // obtenir le + grand prefixe commun 
-                    comparaisonCpt+=petit.length();
-                    //puis ajouter le suffixe de la clé actuelle dans toutes les clés du sous-noeuds et ensuite 
-                    Patricia_Trie tmp = cle.getNext(); // temporaire de la liste suivante 
-                    Patricia_Trie next = new Patricia_Trie() ; // prochaine liste
-                    int len = petit.length();
-                    comparaisonCpt++;
-                    if(petit!=m){
-                        String suf1 = m.substring(len);
-                        String suf2 = cle.val.substring(len);
-                        next.setElm_At(suf1,suf1+fin_chaine ,null );
-                        next.setElm_At(suf2, suf2, tmp);
-                        cle.setVal(petit);
-                        cle.setNext(next);
-                    }else{// si le plus grand prefixe commun est = à m il faut pas essayé de l'ajouter à un sous noeud car on ne représente pas le caractère vide dans la Patricia trie
-                        // petite note : Si on ajoute un mot et que la clé n'est pas un mot du dico alors on va quand même faire un sous-noeux en plus
-                        // Solution : parcourir le noeux enfant et mettre en prefixe le suffixe de petit sur toutes le clés 
-                        if(!(cle.val.endsWith(String.valueOf(fin_chaine)))){ // condition pour éviter de devoir rajouter une hauteur à l'arbre alors que le cle n'est plus un mot du dico 
-                            if(cle.getNext()!=null){
-                                String suf2 = cle.val.substring(len);
-                                //System.out.println("suffix = "+suf2);
-                                cle.getNext().put_prefix_liste(suf2);
-                            }
-                            cle.setVal(petit+fin_chaine);;
-                        }else{
-                        String suf2 = cle.val.substring(len);
-                        next.setElm_At(suf2, suf2, tmp);
-                        cle.setVal(petit+fin_chaine);
-                        cle.setNext(next);
+                // cas ou on insert un mot qui a un préfixe commun avec un mot déjà insérer dans le noeud 
+                String petit = Patricia_Trie.plusGrandPrefixe(m, cle.getVal()); // obtenir le + grand prefixe commun 
+                //puis ajouter le suffixe de la clé actuelle dans toutes les clés du sous-noeuds et ensuite 
+                Patricia_Trie tmp = cle.getNext(); // temporaire de la liste suivante 
+                Patricia_Trie next = new Patricia_Trie() ; // prochaine liste
+                int len = petit.length();
+                comparaisonCpt++;
+                if(!petit.equals(m)){
+                    String suf1 = m.substring(len);
+                    String suf2 = cle.val.substring(len);
+                    next.setElm_At(suf1,suf1+fin_chaine ,null );
+                    next.setElm_At(suf2, suf2, tmp);
+                    cle.setVal(petit);
+                    cle.setNext(next);
+                }else{// si le plus grand prefixe commun est = à m il faut pas essayé de l'ajouter à un sous noeud car on ne représente pas le caractère vide dans la Patricia trie
+                    // petite note : Si on ajoute un mot et que la clé n'est pas un mot du dico alors on va quand même faire un sous-noeux en plus
+                    // Solution : parcourir le noeux enfant et mettre en prefixe le suffixe de petit sur toutes le clés 
+                    if(!(cle.val.endsWith(String.valueOf(fin_chaine)))){ // condition pour éviter de devoir rajouter une hauteur à l'arbre alors que le cle n'est plus un mot du dico 
+                        if(cle.getNext()!=null){
+                            String suf2 = cle.val.substring(len);
+                            //System.out.println("suffix = "+suf2);
+                            cle.getNext().put_prefix_liste(suf2);
                         }
+                        cle.setVal(petit+fin_chaine);;
+                    }else{
+                    String suf2 = cle.val.substring(len);
+                    next.setElm_At(suf2, suf2, tmp);
+                    cle.setVal(petit+fin_chaine);
+                    cle.setNext(next);
                     }
-                    
-                }
+                }      
+                
             }
         }
     }
@@ -362,21 +352,22 @@ public class Patricia_Trie{
     public boolean rechercher_mot(String mot){
         if(mot==null){return false;}
         if(mot.length()==0){
-            if(liste==first_list){
-                return mot_vide;
-            }else{
-                return false;
-            }
+            //System.out.println("vide");
+            return mot_vide;
         }
         if(nb_nil==127){
             return false;
         }
         Elements cle = getElm_At(mot);
         if(cle!=null){
-            String petit = Patricia_Trie.plusGrandPrefixe(mot, cle.getVal());
-            comparaisonCpt+=petit.length();
+            String petit;
+            if(cle.val.endsWith(String.valueOf(fin_chaine))){
+                petit=cle.getVal().substring(0,cle.getVal().length()-1);
+            }else{
+                petit=cle.getVal().substring(0,cle.getVal().length());
+            }
             comparaisonCpt++;
-            if(petit==mot){ // cas ou le plus grand prefixe commun vaut le mot recherché 2 possibilités 1. la cle se termine par '\0' et le mot y est 2. non
+            if(petit.equals(mot)){ // cas ou le plus grand prefixe commun vaut le mot recherché 2 possibilités 1. la cle se termine par '\0' et le mot y est 2. non
                 if(cle.val.endsWith(String.valueOf(fin_chaine))){
                     return true;
                 }
@@ -384,8 +375,8 @@ public class Patricia_Trie{
             }
             int len1= petit.length();
             int len2= mot.length();
-            comparaisonCpt++;
-            if(len1>len2){// on verifie que le mot qu'on cherche est bien plus long que la clé qu'on possède sinon c'est qu'il n'y est pas 
+            if(len1>=len2 || !(mot.startsWith(petit))){// on verifie que le mot qu'on cherche est bien plus long que la clé qu'on possède sinon c'est qu'il n'y est pas 
+                System.out.println("Plus petit");
                 return false;
             }
             //on est dans le cas où notre mot n'est pas dans la clé de notre noeud mais qu'il a encore un suffixe qu'on pourra verifier l'appartenance dans les sous-noeuds            
@@ -402,7 +393,7 @@ public class Patricia_Trie{
     public boolean suppression(String mot){// fonction qui va supprimer le mot s'il se trouve dans la patricia trie et renvoyer vrai si la suppression a été opéré, faux sinon
         if(mot==null){ return false;}
         if(mot.length()==0){
-            if(liste==first_list){
+            if(isMotVide()){
                 mot_vide=false;
                 return true;
             }else{
@@ -411,22 +402,21 @@ public class Patricia_Trie{
         }
         Elements cle = getElm_At(mot);
         if(cle!=null){
-            //System.out.println(" mot a supp = "+mot);
-            String petit = Patricia_Trie.plusGrandPrefixe(mot, cle.getVal());
-            comparaisonCpt+=petit.length();
-            if(petit==mot){ // cas ou le plus grand prefixe commun vaut le mot recherché 2 possibilités 1. la cle se termine par '\0' et le mot y est 2. non
+            String petit;
+            if(cle.val.endsWith(String.valueOf(fin_chaine))){
+                petit=cle.getVal().substring(0,cle.getVal().length()-1);
+            }else{
+                petit=cle.getVal().substring(0,cle.getVal().length());
+            }
+            if(petit.equals(mot)){ // cas ou le plus grand prefixe commun vaut le mot recherché 2 possibilités 1. la cle se termine par '\0' et le mot y est 2. non
                 if(cle.getVal().endsWith(String.valueOf(fin_chaine))){
-                    //System.out.println(" cas pgpc vaut le mot recherché ");
                     if(cle.getNext()==null){
-                        //System.out.println(" dans le if ");
                         char conv = cle.getVal().charAt(0);
                         int ascii = (int) conv ;
                         ascii-=1;
                         nb_nil++;
                         liste[ascii]=null;
-                        //cle.setVal(null);
                     }else{
-                        //System.out.println("dans le else");
                         cle.setVal(cle.getVal().substring(0, cle.getVal().length()-1));
                     }
                     
@@ -434,10 +424,9 @@ public class Patricia_Trie{
                 }
                 return false;
             }
-            //System.out.println("cas autre ");
             int len1= petit.length();
             int len2= mot.length();
-            if(len1>len2){
+            if(len1>=len2 || !(mot.startsWith(petit))){
                 return false;
             }
             Patricia_Trie next = cle.getNext();
