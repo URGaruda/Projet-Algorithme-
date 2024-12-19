@@ -91,7 +91,7 @@ public class Test_Patricia {
         System.out.println("main : ");
         //System.out.println(t4.toString());
         */
-        
+        /*
         Patricia_Trie pat = new Patricia_Trie();
         File directory = new File("Shakespeare");
         File[] files = directory.listFiles();
@@ -121,6 +121,29 @@ public class Test_Patricia {
         System.out.println("Nombre total de mots insérés : " + pat.comptageMots());
         long elapsedTime = endTime - startTime;
         System.out.println("Temps total d'insertion : " + elapsedTime + " millisecondes soit "+ (endTime - startTime)/1000.0+ " secondes");
-        
+        */
+        if(args[0].equals("inserer")){
+            Patricia_Trie var= new Patricia_Trie();
+            try{
+                BufferedReader br = new BufferedReader(new FileReader(args[1]));
+                String line;
+                while ((line = br.readLine()) != null) {
+                    String[] mots = line.split("\\s+");
+                    for (String mot : mots) {
+                        mot = mot.replaceAll("[^a-zA-Z0-9]", "");
+                        var.patInsertion(mot);
+                    }
+                }
+                br.close();
+                //System.out.println(var.toString());
+                if(args[1].contains(".txt"))
+                    Patricia_Trie.patTojson(var,args[1].substring(0,args[1].length()-3).concat("json"));
+                else
+                Patricia_Trie.patTojson(var,args[1].concat(".json"));
+            }catch(IOException e){
+                System.err.println("Erreur"+e.getMessage());
+            }
+        }
+        System.out.println("taille argv : "+args.length+" name : "+args[0]+" fichier : "+args[1]);
     }
 }
