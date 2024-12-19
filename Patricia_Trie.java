@@ -558,6 +558,7 @@ public class Patricia_Trie{
     }
     
 
+
     private static Patricia_Trie jsonToPatRec(BufferedReader br){
         Pattern posPattern = Pattern.compile("\"(.*?)\": \\{");
         Pattern labelPattern = Pattern.compile("\"label\": \"(.*?)\"");
@@ -605,23 +606,26 @@ public class Patricia_Trie{
                     continue;
                 }
                 if(childMatcher.find()){
-                    System.out.println("est tu là ? ");
+                    System.out.println("est tu là ? "+childMatcher.group(1));
                     if(childMatcher.group(1).equals("{")){
                         Patricia_Trie tmp = jsonToPatRec(br);
                         System.out.println("attention");
-                        System.out.println(tmp.toString());
+                        //System.out.println(tmp.toString());
                         Elements cle = res.getElm_At(val);
-                        System.out.println("att cle : "+cle.getVal());
-                        System.out.println("fini");
+                        //System.out.println("att cle : "+cle.getVal());
+                        //System.out.println("fini");
                         cle.setNext(tmp);
                         line = br.readLine();
                     }
                     continue;   
                 }
 
-                String fin_elm = line.trim();
-                if(fin_elm=="}"){
-                    return res;
+                if(line!=null){
+                    String fin_elm = line.trim();
+                    System.out.println("line : "+line.trim());
+                    if(fin_elm.equals("}")){
+                        return res;
+                    }
                 }
             }
 
