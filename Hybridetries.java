@@ -214,7 +214,7 @@ public Hybridetries insertKey(String key) {
                 return this;
             }
             else if(key.length()==1&&this.getrac().getcpt()!=0){
-                System.out.println(" FIN mot deja dans le dico " + this.getrac().getcpt());
+               // System.out.println(" FIN mot deja dans le dico " + this.getrac().getcpt());
                 this.setCpt();
                 return this;//on ne fait rien car mot deja ds le dico
             }
