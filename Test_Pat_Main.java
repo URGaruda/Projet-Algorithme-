@@ -25,7 +25,7 @@ public class Test_Pat_Main {
             //System.out.println("prefixe de = "+var.prefixe("dac"));
             //System.out.println("Nb nil = "+var.comptageNil()+" Nb mots = "+var.comptageMots());
             //System.out.println("hauteur = "+var.hauteur());
-            System.out.println("liste = "+var.listeMots()+" nb_comparaison = "+var.comparaisonCpt);
+            System.out.println("liste = "+var.listeMots()+" nb_comparaison = "+Patricia_Trie.comparaisonCpt);
 
         }catch(IOException e){
             System.err.println("Erreur"+e.getMessage());

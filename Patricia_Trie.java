@@ -509,7 +509,6 @@ public class Patricia_Trie{
     public static Patricia_Trie json_to_pat(String file) {
         Patricia_Trie res = new Patricia_Trie();
         try {
-            boolean prem = false;
             boolean est_il_vide = false;
             BufferedReader br = new BufferedReader(new FileReader(file));
             String line;
