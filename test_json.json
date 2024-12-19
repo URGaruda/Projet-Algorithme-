@@ -1,0 +1,38 @@
+{
+   "label": "",
+   "is_end_of_word": false,
+   "children": {
+   "A": {
+      "label": "A",
+      "is_end_of_word": false,
+      "children": {
+         "A": {
+            "label": "A",
+            "is_end_of_word": true,
+            "children": {}
+         },
+         "C": {
+            "label": "C",
+            "is_end_of_word": true,
+            "children": {}
+         }
+      }
+   },
+   "C": {
+      "label": "CGGA",
+      "is_end_of_word": true,
+      "children": {}
+   },
+   "T": {
+      "label": "TC",
+      "is_end_of_word": true,
+      "children": {
+         "A": {
+            "label": "A",
+            "is_end_of_word": true,
+            "children": {}
+         }
+      }
+   }
+   }
+}

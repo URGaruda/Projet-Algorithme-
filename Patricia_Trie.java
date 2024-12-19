@@ -375,6 +375,7 @@ public class Patricia_Trie{
             }
             int len1= petit.length();
             int len2= mot.length();
+            comparaisonCpt++;
             if(len1>=len2 || !(mot.startsWith(petit))){// on verifie que le mot qu'on cherche est bien plus long que la clé qu'on possède sinon c'est qu'il n'y est pas 
                 System.out.println("Plus petit");
                 return false;
@@ -400,6 +401,7 @@ public class Patricia_Trie{
                 return false;
             }
         }
+        System.out.println(" mot à supprimer = "+mot+" et sa taille = "+mot.length()+" vaut t'il mot nul ?"+String.valueOf(fin_chaine).equals(mot));
         Elements cle = getElm_At(mot);
         if(cle!=null){
             String petit;
