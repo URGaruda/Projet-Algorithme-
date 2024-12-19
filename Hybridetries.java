@@ -9,7 +9,7 @@ import java.util.*;
 
 public class Hybridetries  {
 
-    /*classe racine = couple char int pour marquer la fin d'un mot */
+    /*classe racine = triplé char int boolean  pour marquer la fin d'un mot */
     public class Racine{
         public Racine(char ra,int cpt,boolean visited){
             this.ra=ra;
@@ -20,6 +20,8 @@ public class Hybridetries  {
         private int cpt;
         private boolean visited;
 
+
+        /****Getter et Setter*****/
         public char getRa(){
             return ra;
         }
@@ -43,6 +45,9 @@ public class Hybridetries  {
         public void setVisited(){
             visited= true;
         }
+        public void resetflag(){
+            visited=false;
+        }
 
 
     }
@@ -50,7 +55,7 @@ public class Hybridetries  {
     /*Fin classe racine  */
 
 
-    //constructeur abr vide
+    //Constructeur abr vide
     public Hybridetries(){
         this.racine= new Racine('/',0,false);
         this.inf = null;
@@ -66,51 +71,14 @@ public class Hybridetries  {
     private  Racine racine ;
     private static int end_word=0;
 
-    // charAt(), substring(), isEmpty() dans la bibli String
+  
 
-    //primitive sur le clé 
-
-    /*recuperer la première lettre de la clé */
-    public static char firstchar(String key) {
-        
-        if (key != null && !key.isEmpty()) {
-            return key.charAt(0);  
-        } 
-        System.out.println("la clé est vide");
-        return ' ';
-
-    }
+   
 
     public Hybridetries getinf(){
         return this.inf;
     }
-     
-/*récuperer la cle sans la première lettre */
-    public static String remaining(String key){
 
-        if (key != null && !key.isEmpty()) {
-            return key.substring(1);  
-        } 
-        System.out.println("la clé est vide");
-        return "0";
-     }
-
-
-
-
-    /*longeur de la clé */
-    public static int length(String key) {
-
-        return key.length();
-    }
-
-    //Primitive abr
-
-    /*arbre vide ou pas */
-    public  boolean  isEmpty(){
-       return this.racine.getRa()=='/'&&this.racine.getcpt()==0;
-       
-    }
     /*recuper racine  */
     public Racine getrac(){
         return this.racine;
@@ -126,16 +94,71 @@ public class Hybridetries  {
 
     public void setCpt(){
         end_word++;
-}
+}    
     public void set_end_of_word(){
         this.racine.setcpt(end_word);
-    }
+}
     public void resetCpt(){
-        end_word=0;
+         end_word=0;
+}
+
+     /*****Primitive sur le clé ***/
+
+    /*recuperer la première lettre de la clé */
+    public static char firstchar(String key) {
+        
+        if (key != null && !key.isEmpty()) {
+            return key.charAt(0);  
+        } 
+       
+        return ' ';
+
     }
      
+   /*récuperer la cle sans la première lettre */
+    public static String remaining(String key){
+
+        if (key != null && !key.isEmpty()) {
+            return key.substring(1);  
+        } 
+        
+        return " ";
+     }
 
 
+
+
+    /*longeur de la clé */
+    public static int length(String key) {
+
+        return key.length();
+    }
+
+    
+
+    /*arbre vide ou pas */
+    public  boolean  isEmpty(){
+       return this.racine.getRa()=='/'&&this.racine.getcpt()==0;
+       
+    }
+   
+     
+
+    private static int cpt_ins=0;
+
+    public void setcpt_ins(){
+        cpt_ins=0;
+    }
+    public int getcpt_ins(){
+        System.out.println("complexité insertion : nb d'arbre cree" + cpt_ins );
+        return cpt_ins;
+    }
+
+    public int  incr_cpt_ins(){
+        System.out.println("complexité insertion : nb d'arbre cree " + cpt_ins );
+       return cpt_ins+=3;
+
+    }
    
 public Hybridetries insertKey(String key) {
     
@@ -151,6 +174,7 @@ public Hybridetries insertKey(String key) {
             this.inf = new Hybridetries();  
             this.eq = new Hybridetries();
             this.sup = new Hybridetries();
+            incr_cpt_ins();
             return this;
             
         } else { 
@@ -159,8 +183,10 @@ public Hybridetries insertKey(String key) {
             System.out.println("EQ " + this.getrac().getRa()+ " "+ this.getrac().getcpt());  
             this.inf = new Hybridetries();  
             this.eq = new Hybridetries();
-            this.sup = new Hybridetries();  
+            this.sup = new Hybridetries(); 
+            incr_cpt_ins(); 
             this.eq.insertKey(remaining(key)); 
+            
         }
     } else {
         char p = firstchar(key); 
@@ -200,6 +226,15 @@ public Hybridetries insertKey(String key) {
     return this;
 }
 
+    private static int cpt_re=0;
+    public void setcpt_re(){
+        cpt_re=0;
+    }
+
+    public int getcpt_re(){
+        System.out.println("complexité recherche : nb de comparaisons " + cpt_re );
+        return cpt_re;
+    }
 
     public boolean  Recherche(Hybridetries arbre,String mot){
 
@@ -209,7 +244,7 @@ public Hybridetries insertKey(String key) {
      
        
      if(this.isEmpty()){System.out.println("false " + this.getrac().getcpt());return false;}
-
+        cpt_re+=3;
      if (p < this.getrac().getRa()) {
            return inf.Recherche(this.inf, mot.toLowerCase());  
         }
@@ -227,18 +262,46 @@ public Hybridetries insertKey(String key) {
         
     }
 
-    
-    public int ComptageMots(Hybridetries arbre){
+    void reset_flag(){// remet CPT à 0 et tous les noeuds à nul, peut etre pb ptrs null plus que ce qu'il en faut
 
-     if(arbre.isEmpty()) return 0; 
+        
+        if (this.inf!=null&&!this.inf.isEmpty()){
+        this.getrac().resetflag();
+        this.inf.reset_flag();
+
+        }
+
+        if(this.sup!=null&&!this.sup.isEmpty()){
+        this.getrac().resetflag();
+        this.sup.reset_flag();
+        }
      
+    
+        if(this.eq!=null&&!this.eq.isEmpty()){ 
+        this.getrac().resetflag();
+        this.eq.reset_flag();
+
+        }   
+     
+     
+    }
+
+    public int Compter_bis(Hybridetries arbre){
+
+        if(arbre.isEmpty()) return 0; 
        
      if(arbre.getrac().getcpt()!=0&&arbre.getrac().getVisited()==false){//si pas visité et c'est un mots on rajoute 1
         arbre.getrac().setVisited();
-        return 1+ ComptageMots(arbre.eq)+ComptageMots(arbre.sup)+ ComptageMots(arbre.inf);
+        return 1+ Compter_bis(arbre.eq)+Compter_bis(arbre.sup)+ Compter_bis(arbre.inf);
      }else{
-        return ComptageMots(arbre.eq)+ComptageMots(arbre.sup)+ ComptageMots(arbre.inf);
+        return Compter_bis(arbre.eq)+Compter_bis(arbre.sup)+ Compter_bis(arbre.inf);
      }
+        
+    }
+
+    public int ComptageMots(Hybridetries arbre){
+     arbre.reset_flag();
+     return Compter_bis(arbre);
 
     }
 
@@ -246,42 +309,50 @@ public Hybridetries insertKey(String key) {
 
    /// fonction utilisé pour ListeMots()
     public  Set<String> ajout_mots(Hybridetries abr_courant , String mot_courrant, Set<String> words){
-                
-        if (abr_courant.isEmpty()) {
-            return words;
-        }
-
-        if (!abr_courant.inf.isEmpty()){
-            ajout_mots(abr_courant.inf, mot_courrant, words);
+    
+       
+        if(abr_courant!=null&&!abr_courant.isEmpty()){
+        if (abr_courant.inf!=null&&!abr_courant.inf.isEmpty()){
+             ajout_mots(abr_courant.inf, mot_courrant, words);
 
         }
 
-        if (!abr_courant.sup.isEmpty()){
+        if (abr_courant.sup!=null&&!abr_courant.sup.isEmpty()){
              ajout_mots(abr_courant.sup, mot_courrant, words);
         }
          // Ajouter le caractère actuel au mot en construction
         
         if(abr_courant.getrac().getcpt()==0){ 
           mot_courrant += abr_courant.getrac().getRa();
-          return ajout_mots(abr_courant.eq, mot_courrant, words);
+           ajout_mots(abr_courant.eq, mot_courrant, words);
 
         }
+       
         else if(abr_courant.getrac().getcpt()!=0 && abr_courant.getrac().getVisited()==true){
-                return ajout_mots(abr_courant.eq, mot_courrant, words);
+                 ajout_mots(abr_courant.eq, mot_courrant, words);
 
-        }else if(abr_courant.getrac().getcpt()!=0 && abr_courant.getrac().getVisited()==false){
+            
+        } else if(abr_courant.getrac().getcpt()!=0 && abr_courant.getrac().getVisited()==false){
             mot_courrant += abr_courant.getrac().getRa();
             abr_courant.getrac().setVisited();
             words.add(mot_courrant);
-            return ajout_mots(abr_courant.eq, mot_courrant, words);
+             ajout_mots(abr_courant.eq, mot_courrant, words);
 
         }
+               
+       
+        }
         return words;
+       
     }
 
     public  ArrayList<String> ListeMots(Hybridetries arbre){
+        arbre.reset_flag();
+       
         Set<String> mots= new HashSet<>();
         Set<String> temp = ajout_mots(arbre , "", mots);
+
+       
         ArrayList<String> res= new ArrayList<>();
 
         for(String words : temp){
@@ -308,12 +379,16 @@ public Hybridetries insertKey(String key) {
 
  //regler pb flag visited
 
+ private static int cpt_ha=0;
 
+ public int getcpt_ha(){
+    return cpt_ha;
+ }
  public  Set<Integer> hauteur_bis(Hybridetries abr_courant , int cpt_courant, Set<Integer> profondeurs){
                 
     if (abr_courant.eq.isEmpty()&&abr_courant.inf.isEmpty()&&abr_courant.sup.isEmpty()) {
         profondeurs.add(cpt_courant);
-        
+        cpt_ha+=2;
         return profondeurs;
     }else{
 
@@ -342,31 +417,33 @@ public Hybridetries insertKey(String key) {
     return profondeurs;
  }
 
+   
   public int Hauteur(Hybridetries arbre){
-
+  
+    
     Set<Integer> profondeurs= new HashSet<>();
-    Set<Integer> temp= new HashSet<>();
+    Set<Integer> temp;
     temp= hauteur_bis(arbre , 0, profondeurs);
     int max = 0;
     for(Integer i : temp){
         if(i>max) max=i;
     }
-    System.out.println(max);
+    System.out.println("l'hauteur de l'arbre est   " +max);
     return max;
  }
 
  public int ProfondeurMoyenne(Hybridetries arbre){
 
     Set<Integer> profondeurs= new HashSet<>();
-    Set<Integer> temp= new HashSet<>();
+    Set<Integer> temp;
     temp= hauteur_bis(arbre , 0, profondeurs);
     int cpt = 0;
     for(Integer i : temp){
-        cpt=+i;
+        cpt+=i;
     }
-    System.out.println("somme " +cpt);
-    System.out.println("taile  " +temp.size());
-    System.out.println("Moy=  " +cpt/temp.size());
+    System.out.println("somme des profondeurs de l'arbre " +cpt);
+    System.out.println("nombre de profondeur dans l'arbre " +temp.size());
+    System.out.println("Moy des profondeurs=  " +cpt/temp.size());
 
     return cpt/temp.size();
  }
@@ -460,6 +537,7 @@ void reset(){// remet CPT à 0 et tous les noeuds à nul, peut etre pb ptrs null
     if (!this.inf.isEmpty()){
         this.getrac().setRa('/');
         this.getrac().setcpt(0);
+    
         
         this.inf.reset();
 
@@ -484,15 +562,15 @@ void reset(){// remet CPT à 0 et tous les noeuds à nul, peut etre pb ptrs null
 
 public static void bubbleSort(String[][] arr) {
     int n = arr.length;
-    // Parcours du tableau
+  
     for (int i = 0; i < n - 1; i++) {
-        // Derniers i éléments sont déjà triés
+      
         for (int j = 0; j < n - 1 - i; j++) {
-            // Comparer le deuxième élément de chaque sous-tableau
+            
             int integer1=Integer.parseInt(arr[j][1]);
             int integer2=Integer.parseInt(arr[j + 1][1]);
             if (integer1-integer2 > 0) {
-                // Échanger les sous-tableaux
+                
                 String[] temp = arr[j];
                 arr[j] = arr[j + 1];
                 arr[j + 1] = temp;
@@ -504,10 +582,10 @@ public static void bubbleSort(String[][] arr) {
 public Hybridetries Suppression(Hybridetries arbre, String mot){
     
 
-    Set<String[]> temp= new HashSet<>();
+    Set<String[]> temp;
     Set<String[]> temp2= new HashSet<>();
    
-   
+    arbre.reset_flag();
     int i=0;
     temp= ajout_mots_bis(arbre,"",temp2);
     
@@ -524,7 +602,7 @@ public Hybridetries Suppression(Hybridetries arbre, String mot){
     for (String[] pair : a_trier) {
     System.out.println(pair[0] +  " " + pair[1]);
     }
-    String[] finaly=new String[a_trier.length];
+    String[] finaly=new String[a_trier.length-1];
    
     i=0;
     for(int p=0;p<a_trier.length;p++){
@@ -535,10 +613,10 @@ public Hybridetries Suppression(Hybridetries arbre, String mot){
    for (String s : finaly) {
     System.out.println(s);
 }
-   arbre.reset();
+    arbre.reset();
    for(String w : finaly){
     arbre.insertKey(w);
-    System.out.println("****");
+
    }
    return arbre;
 }
