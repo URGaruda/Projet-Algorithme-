@@ -399,7 +399,7 @@ public class Patricia_Trie{
                 return false;
             }
         }
-        System.out.println(" mot à supprimer = "+mot+" et sa taille = "+mot.length()+" vaut t'il mot nul ?"+String.valueOf(fin_chaine).equals(mot));
+        //System.out.println(" mot à supprimer = "+mot+" et sa taille = "+mot.length()+" vaut t'il mot nul ?"+String.valueOf(fin_chaine).equals(mot));
         Elements cle = getElm_At(mot);
         if(cle!=null){
             String petit;

@@ -2,7 +2,7 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-public class Test_Pat_Main {
+public class Test_Main {
     public static void main(String[] args){
         //Question 1.3 
         String filename ="exemple_de_base.txt";
@@ -77,6 +77,7 @@ public class Test_Pat_Main {
         String middle_word ="government";
         String short_word="dodu";
         List<String> sz_word = Arrays.asList("pneumonoultramicroscopicsilicovolcanoconiosis","government","dodu");
+        List<String> supp_word = Arrays.asList("hello","your","is","as","but","or");
         
         System.out.println("Nombre de comparaison de l'initialisation de la patricia trie = "+Patricia_Trie.comparaisonCpt);
 
@@ -116,6 +117,7 @@ public class Test_Pat_Main {
             System.out.print("valeur : "+val+" ");
         System.out.println();
 
+        // hauteur
         Patricia_Trie.comparaisonCpt=0;
         Long PathautStartTime = System.currentTimeMillis();
         System.out.println("hauteur de la patricia trie = "+pat.hauteur());
@@ -126,6 +128,23 @@ public class Test_Pat_Main {
         System.out.println("hauteur de la trie hybride = "+tree.Hauteur(tree));
         Long HyBhautEndTime = System.currentTimeMillis();
 
+        //Suppression 
+        Long PatsuppStartTime = System.currentTimeMillis();
+        for(String val : supp_word)
+            pat.suppression(val);
+        Long PatsuppEndTime = System.currentTimeMillis();
+
+        
+
+        //profondeur 
+        Long PatproStartTime = System.currentTimeMillis();
+        System.out.println("profondeur moyenne de la patricia trie = "+ pat.profondeurMoyenne());
+        Long PatproEndTime = System.currentTimeMillis();
+
+        Long HybproStartTime = System.currentTimeMillis();
+        System.out.println("profondeur moyenne de la trie hybride = "+tree.ProfondeurMoyenne(tree));
+        Long HybproEndTime = System.currentTimeMillis();
+ 
         System.out.println("****Temps écoulé construction de l'arbre pat trie*********" + elapsedTime + " millisecondes soit "+ (endTime - startTime)/1000.0+ " secondes");
         System.out.println("****Temps écoulé construction de l'arbre trie Hyb********* "+ (endTime_hyb - startTime_hyb) + "milisecondes soit "+ (endTime_hyb - startTime_hyb)/1000.0+ " secondes");
         System.out.println("****Temps écoulé insertion dans l'arbre patricia********* "+ (PatinsertEndTime - PatinsertStartTime) + "milisecondes soit "+ (PatinsertEndTime - PatinsertStartTime)/1000.0+ " secondes");
@@ -135,6 +154,10 @@ public class Test_Pat_Main {
         
         System.out.println("****Temps écoulé hauteur de l'arbre patricia********* "+ (PathautEndTime - PathautStartTime) + "milisecondes soit "+ (PathautEndTime - PathautStartTime)/1000.0+ " secondes");
         System.out.println("****Temps écoulé hauteur de la trie hybride********* "+ (HyBhautEndTime - HyBhautStartTime) + "milisecondes soit "+ (HyBhautEndTime - HyBhautStartTime)/1000.0+ " secondes");
+        System.out.println("****Temps écoulé profondeurMoyenne de l'arbre patricia********* "+ (PatproEndTime - PatproStartTime) + "milisecondes soit "+ (PatproEndTime - PatproStartTime)/1000.0+ " secondes");
+        System.out.println("****Temps écoulé profondeurMoyenne de la trie hybride********* "+ (HybproEndTime - HybproStartTime) + "milisecondes soit "+ (HybproEndTime - HybproStartTime)/1000.0+ " secondes");
+        System.out.println("****Temps écoulé suppression de l'arbre patricia********* "+ (PatsuppEndTime - PatsuppStartTime) + "milisecondes soit "+ (PatsuppEndTime - PatsuppStartTime)/1000.0+ " secondes");
+        
 
     }
     
